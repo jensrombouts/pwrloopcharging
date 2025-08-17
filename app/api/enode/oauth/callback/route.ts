@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exchangeCodeForToken } from '@/lib/enodeClient';
+import { exchangeCodeForToken } from '../../../../../lib/enodeClient';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
