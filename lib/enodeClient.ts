@@ -12,6 +12,9 @@ export async function exchangeCodeForToken(code: string) {
       client_secret: process.env.ENODE_CLIENT_SECRET || '',
     })
   });
-  if (!res.ok) throw new Error('Token exchange failed');
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Token exchange failed: ${res.status} ${text}`);
+  }
   return res.json();
 }

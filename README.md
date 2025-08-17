@@ -1,24 +1,19 @@
-# EVCC Cloud MVP (Webhook-driven)
+# EVCC Cloud MVP (Beginner Helper, Webhook-Only)
 
-This is a **Next.js serverless MVP** for EV smart charging using **Enode sandbox**.
+Deployable on Vercel Hobby. Uses Enode **sandbox**. No cron jobs.
+- `/env` page checks env vars (✅/❌).
+- `/api/enode/connect?asset=vehicle&debug=1` prints the exact Connect URL (no redirect).
+- `/api/enode/connect?asset=vehicle` redirects to Enode Connect sandbox when env is correct.
 
-## How it works
-- Users connect their EV and solar inverter via Enode Connect.
-- Enode sends events to your webhook endpoint.
-- No polling or cron jobs: everything is **event-driven**.
+## Env vars to set in Vercel (Production)
+ENODE_CLIENT_ID=YOUR-SANDBOX-CLIENT-ID
+ENODE_CLIENT_SECRET=YOUR-SANDBOX-CLIENT-SECRET
+ENODE_BASE_URL=https://api.sandbox.enode.com
+ENODE_CONNECT_BASE=https://connect.sandbox.enode.com
+ENODE_REDIRECT_URI=https://YOUR-APP.vercel.app/api/enode/oauth/callback
+JWT_SECRET=any-long-random
 
-## Deploy on Vercel (Hobby plan supported)
-1. Upload this repo to GitHub.
-2. Import the repo into Vercel.
-3. Set environment variables from `.env.local.example`.
-4. Deploy.
-
-## Important files
-- `app/page.tsx`: UI with Connect button and status view.
-- `app/api/enode/oauth/callback/route.ts`: OAuth callback handler.
-- `app/api/enode/webhook/route.ts`: Webhook endpoint to receive Enode events.
-- `lib/enodeClient.ts`: Helper to talk to Enode API.
-
-## Next steps
-- Store Enode tokens in a DB (Supabase, Planetscale).
-- Implement real charging policy logic in the webhook handler.
+## Test flow
+1) Deploy → open `/env` and ensure all ✅.
+2) Open `/api/enode/connect?asset=vehicle&debug=1` → copy URL (should contain a full https redirect_uri).
+3) Open `/api/enode/connect?asset=vehicle` → should land on Enode Connect sandbox.
