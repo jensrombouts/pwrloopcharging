@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   const connectBase = process.env.ENODE_CONNECT_BASE || 'https://connect.sandbox.enode.com';
-  const clientId = process.env.ENODE_CLIENT_ID || '';
-  const appUrl = process.env.APP_URL || '';
-  const redirectUri = `${appUrl}/api/enode/oauth/callback`;
+  const clientId = process.env.ENODE_CLIENT_ID;
+  const redirectUri = process.env.ENODE_REDIRECT_URI; // MUST be full https URL
+
+  if (!clientId) {
+    return NextResponse.json({ error: 'Missing ENODE_CLIENT_ID' }, { status: 500 });
+  }
+  if (!redirectUri?.startsWith('http')) {
+    return NextResponse.json({ error: 'ENODE_REDIRECT_URI must be an absolute https URL' }, { status: 500 });
+  }
 
   const { searchParams } = new URL(req.url);
   const asset = searchParams.get('asset') || 'vehicle';
